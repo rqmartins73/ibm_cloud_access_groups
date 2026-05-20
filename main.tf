@@ -191,5 +191,16 @@ resource "ibm_iam_access_group_policy" "operators_cos" {
   }
 }
 
+
+# Operators Policy - Viewer access to Power Virtual Server
+resource "ibm_iam_access_group_policy" "operators_power_vs" {
+  access_group_id = ibm_iam_access_group.operators.id
+  roles           = ["Viewer"]
+
+  resources {
+    service = "power-iaas"
+  }
+}
+
 # Removed - databases-for-* is not a valid service name
 # Users should add specific database service policies as needed
