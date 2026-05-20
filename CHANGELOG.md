@@ -5,6 +5,21 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [1.0.2] - 2026-05-20
+
+### Added
+- Comprehensive Administrator access group policies matching IBM Cloud best practices:
+  - IAM Identity Service with Administrator, User API key creator, and Service ID creator roles
+  - Compliance service with Administrator and Editor roles
+  - Support Center with Editor role
+  - VPC Infrastructure Services with all available roles (Administrator, Editor, Operator, Viewer, Manager, Writer, Reader, Key Manager, Service Configuration Reader, Console Administrator, IP Spoofing Operator, VPN Client)
+  - Resource Groups with Viewer and Editor roles
+
+### Changed
+- Enhanced Admin access group with granular service-specific policies
+- Admin now has explicit policies for IAM Identity, Compliance, Support, VPC, and Resource Groups
+- Improved policy structure for better access control and auditing
+
 ## [1.0.1] - 2026-05-20
 
 ### Fixed
@@ -42,5 +57,6 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Example configuration file (terraform.tfvars.example)
 - Git ignore file for Terraform sensitive files
 
+[1.0.2]: https://github.com/rqmartins/ibm_cloud_access_groups/compare/v1.0.1...v1.0.2
 [1.0.1]: https://github.com/rqmartins/ibm_cloud_access_groups/compare/v1.0.0...v1.0.1
 [1.0.0]: https://github.com/rqmartins/ibm_cloud_access_groups/releases/tag/v1.0.0

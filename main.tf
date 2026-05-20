@@ -19,8 +19,8 @@ resource "ibm_iam_access_group" "admin" {
   description = "Access group for administrators with full access to all IBM Cloud resources"
 }
 
-# Admin Policy - Full Administrator access to all services
-resource "ibm_iam_access_group_policy" "admin_all_access" {
+# Admin Policy - All Identity and Access enabled services
+resource "ibm_iam_access_group_policy" "admin_all_services" {
   access_group_id = ibm_iam_access_group.admin.id
   roles           = ["Administrator", "Manager"]
 }
@@ -31,6 +31,69 @@ resource "ibm_iam_access_group_policy" "admin_account_management" {
   roles           = ["Administrator"]
 
   account_management = true
+}
+
+# Admin Policy - IAM Identity Service
+resource "ibm_iam_access_group_policy" "admin_iam_identity" {
+  access_group_id = ibm_iam_access_group.admin.id
+  roles           = ["Administrator", "User API key creator", "Service ID creator"]
+
+  resources {
+    service = "iam-identity"
+  }
+}
+
+# Admin Policy - Compliance
+resource "ibm_iam_access_group_policy" "admin_compliance" {
+  access_group_id = ibm_iam_access_group.admin.id
+  roles           = ["Administrator", "Editor"]
+
+  resources {
+    service = "compliance"
+  }
+}
+
+# Admin Policy - Support Center
+resource "ibm_iam_access_group_policy" "admin_support" {
+  access_group_id = ibm_iam_access_group.admin.id
+  roles           = ["Editor"]
+
+  resources {
+    service = "support"
+  }
+}
+
+# Admin Policy - VPC Infrastructure Services (All roles)
+resource "ibm_iam_access_group_policy" "admin_vpc" {
+  access_group_id = ibm_iam_access_group.admin.id
+  roles = [
+    "Administrator",
+    "Editor",
+    "Operator",
+    "Viewer",
+    "Manager",
+    "Writer",
+    "Reader",
+    "Key Manager",
+    "Service Configuration Reader",
+    "Console Administrator",
+    "IP Spoofing Operator",
+    "VPN Client"
+  ]
+
+  resources {
+    service = "is"
+  }
+}
+
+# Admin Policy - Resource Groups (Viewer and Editor)
+resource "ibm_iam_access_group_policy" "admin_resource_groups" {
+  access_group_id = ibm_iam_access_group.admin.id
+  roles           = ["Viewer", "Editor"]
+
+  resources {
+    resource_type = "resource-group"
+  }
 }
 
 # System Administrators Access Group - Access to everything except IAM and Account
