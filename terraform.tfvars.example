@@ -1,0 +1,11 @@
+# IBM Cloud API Key - REQUIRED
+# Get your API key at: https://cloud.ibm.com/iam/apikeys
+ibmcloud_api_key = "your-ibm-cloud-api-key-here"
+
+# IBM Cloud region (optional, default: eu-de)
+region = "eu-de"
+
+# Custom names for Access Groups (optional)
+admin_group_name     = "Administrators"
+sysadmin_group_name  = "System-Administrators"
+operators_group_name = "Operators"
