@@ -133,6 +133,16 @@ resource "ibm_iam_access_group_policy" "sysadmin_cloud_object_storage" {
 
   resources {
     service = "cloud-object-storage"
+
+resource "ibm_iam_access_group_policy" "sysadmin_power_vs" {
+  access_group_id = ibm_iam_access_group.sysadmin.id
+  roles           = ["Administrator", "Manager", "Editor", "Operator"]
+
+  resources {
+    service = "power-iaas"  # Power Virtual Server
+  }
+}
+
   }
 }
 
