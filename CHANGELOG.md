@@ -5,6 +5,11 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [1.0.5] - 2026-05-20
+
+### Fixed
+- Fixed syntax error in main.tf where closing brace was missing for sysadmin_cloud_object_storage resource
+
 ## [1.0.4] - 2026-05-20
 
 ### Added
@@ -67,6 +72,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Example configuration file (terraform.tfvars.example)
 - Git ignore file for Terraform sensitive files
 
+[1.0.5]: https://github.com/rqmartins/ibm_cloud_access_groups/compare/v1.0.4...v1.0.5
 [1.0.4]: https://github.com/rqmartins/ibm_cloud_access_groups/compare/v1.0.3...v1.0.4
 [1.0.3]: https://github.com/rqmartins/ibm_cloud_access_groups/compare/v1.0.2...v1.0.3
 [1.0.2]: https://github.com/rqmartins/ibm_cloud_access_groups/compare/v1.0.1...v1.0.2
