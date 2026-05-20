@@ -19,15 +19,10 @@ resource "ibm_iam_access_group" "admin" {
   description = "Access group for administrators with full access to all IBM Cloud resources"
 }
 
-# Admin Policy - Full Administrator access
+# Admin Policy - Full Administrator access to all services
 resource "ibm_iam_access_group_policy" "admin_all_access" {
   access_group_id = ibm_iam_access_group.admin.id
-  roles           = ["Administrator"]
-
-  resources {
-    resource_type = "resource-group"
-    resource      = "*"
-  }
+  roles           = ["Administrator", "Manager"]
 }
 
 # Admin Policy - Account Management
@@ -44,21 +39,16 @@ resource "ibm_iam_access_group" "sysadmin" {
   description = "Access group for system administrators with access to all resources except IAM and Account management"
 }
 
-# System Admin Policy - Editor access to all resource groups
+# System Admin Policy - Editor access to all services
 resource "ibm_iam_access_group_policy" "sysadmin_resources" {
   access_group_id = ibm_iam_access_group.sysadmin.id
-  roles           = ["Editor", "Manager"]
-
-  resources {
-    resource_type = "resource-group"
-    resource      = "*"
-  }
+  roles           = ["Editor", "Operator"]
 }
 
-# System Admin Policy - Specific service access (excluding IAM)
+# System Admin Policy - VPC Infrastructure Services
 resource "ibm_iam_access_group_policy" "sysadmin_platform_services" {
   access_group_id = ibm_iam_access_group.sysadmin.id
-  roles           = ["Editor", "Manager", "Viewer"]
+  roles           = ["Editor", "Operator", "Viewer"]
 
   resources {
     service = "is"  # VPC Infrastructure Services
@@ -83,14 +73,8 @@ resource "ibm_iam_access_group_policy" "sysadmin_cloud_object_storage" {
   }
 }
 
-resource "ibm_iam_access_group_policy" "sysadmin_databases" {
-  access_group_id = ibm_iam_access_group.sysadmin.id
-  roles           = ["Administrator", "Manager"]
-
-  resources {
-    service = "databases-for-*"
-  }
-}
+# Removed - databases-for-* is not a valid service name
+# Users should add specific database service policies as needed
 
 # Operators Access Group - Read and operate deployed resources
 resource "ibm_iam_access_group" "operators" {
@@ -98,15 +82,10 @@ resource "ibm_iam_access_group" "operators" {
   description = "Access group for operators with read and operate access to deployed resources"
 }
 
-# Operators Policy - Operator role for all resource groups
+# Operators Policy - Viewer access to all services
 resource "ibm_iam_access_group_policy" "operators_resources" {
   access_group_id = ibm_iam_access_group.operators.id
-  roles           = ["Operator", "Viewer"]
-
-  resources {
-    resource_type = "resource-group"
-    resource      = "*"
-  }
+  roles           = ["Viewer"]
 }
 
 # Operators Policy - Viewer access to VPC
@@ -139,12 +118,5 @@ resource "ibm_iam_access_group_policy" "operators_cos" {
   }
 }
 
-# Operators Policy - Viewer access to Databases
-resource "ibm_iam_access_group_policy" "operators_databases" {
-  access_group_id = ibm_iam_access_group.operators.id
-  roles           = ["Viewer"]
-
-  resources {
-    service = "databases-for-*"
-  }
-}
+# Removed - databases-for-* is not a valid service name
+# Users should add specific database service policies as needed

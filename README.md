@@ -7,31 +7,29 @@ This Terraform project creates three Access Groups in IBM Cloud with different p
 ### 1. Administrators (Admin)
 - **Access**: Full access to all IBM Cloud resources and services
 - **Permissions**: 
-  - Administrator role on all resource groups
+  - Administrator and Manager roles on all services
   - Complete Account Management (including IAM)
 - **Use Case**: For administrators with full account control
 
 ### 2. System Administrators (SysAdmin)
 - **Access**: All resources except IAM and Account Management
 - **Permissions**:
-  - Editor and Manager on resource groups
-  - Administrator/Manager on specific services:
-    - VPC Infrastructure Services
-    - Kubernetes/OpenShift
-    - Cloud Object Storage
-    - Databases
+  - Editor and Operator on all services
+  - Editor/Operator/Viewer on VPC Infrastructure Services
+  - Administrator/Manager on Kubernetes/OpenShift
+  - Manager/Writer/Reader on Cloud Object Storage
 - **Use Case**: For system administrators who manage infrastructure but not users/permissions
+- **Note**: Database service policies should be added manually for specific database services (e.g., databases-for-postgresql, databases-for-mongodb)
 
 ### 3. Operators
 - **Access**: Read-only and operation access to deployed resources
 - **Permissions**:
-  - Operator and Viewer on resource groups
-  - Viewer/Operator on services:
-    - VPC Infrastructure Services
-    - Kubernetes/OpenShift
-    - Cloud Object Storage (Reader)
-    - Databases (Viewer)
+  - Viewer on all services
+  - Viewer/Operator on VPC Infrastructure Services
+  - Viewer/Operator on Kubernetes/OpenShift
+  - Reader/Viewer on Cloud Object Storage
 - **Use Case**: For operators who need to view and operate resources but not modify configurations
+- **Note**: Database service policies should be added manually for specific database services
 
 ## Prerequisites
 
@@ -124,6 +122,40 @@ ibmcloud iam access-group-user-add System-Administrators user@example.com
 ibmcloud iam access-group-user-add Operators user@example.com
 ```
 
+## Adding Database Service Policies
+
+To add policies for specific database services, you can extend the configuration:
+
+```hcl
+# Example: Add PostgreSQL access for System Administrators
+resource "ibm_iam_access_group_policy" "sysadmin_postgresql" {
+  access_group_id = ibm_iam_access_group.sysadmin.id
+  roles           = ["Administrator", "Manager"]
+
+  resources {
+    service = "databases-for-postgresql"
+  }
+}
+
+# Example: Add MongoDB access for Operators
+resource "ibm_iam_access_group_policy" "operators_mongodb" {
+  access_group_id = ibm_iam_access_group.operators.id
+  roles           = ["Viewer"]
+
+  resources {
+    service = "databases-for-mongodb"
+  }
+}
+```
+
+Valid database service names include:
+- `databases-for-postgresql`
+- `databases-for-mongodb`
+- `databases-for-mysql`
+- `databases-for-redis`
+- `databases-for-elasticsearch`
+- `databases-for-etcd`
+
 ## State Management
 
 Terraform state is stored locally in `terraform.tfstate`. For production environments, consider using remote state:
@@ -168,6 +200,14 @@ terraform destroy
 └── README.md         # This documentation
 ```
 
+## Known Limitations
+
+1. **Resource Group Wildcards**: IBM Cloud IAM does not support wildcards (`*`) for the `resource` attribute in resource group policies. Policies are applied at the account level instead.
+
+2. **Database Service Names**: Generic patterns like `databases-for-*` are not supported. You must specify exact service names (e.g., `databases-for-postgresql`).
+
+3. **Manager Role**: The "Manager" role is not available for resource group policies. Valid roles are: Administrator, Operator, Editor, Viewer, Service Configuration Reader, Key Manager.
+
 ## Troubleshooting
 
 ### Error: "Insufficient permissions"
@@ -181,6 +221,10 @@ terraform destroy
 ### Error: "Invalid API key"
 - Verify that the API key is correct
 - Confirm there are no extra spaces or characters
+
+### Error: "Wildcard is not allowed for this CRN attribute"
+- This has been fixed in version 1.0.1
+- Update to the latest version
 
 ## Support
 
